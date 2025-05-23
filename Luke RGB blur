@@ -21,7 +21,7 @@ def blurgb(bluramount,kernsize,picture_name):
     for ix, i in enumerate(range(-halfkern+1, halfkern)):
         for iy, j in enumerate(reversed(range(-halfkern+1, halfkern))):
             datagrid[iy,ix] = i,j
-    dataval[iy,ix]= round(g(t_value, i, j),20)
+            dataval[iy,ix]= round(g(t_value, i, j),20)
     dataval /= dataval.sum()
 
     #implementation
@@ -30,8 +30,8 @@ def blurgb(bluramount,kernsize,picture_name):
         padded = np.pad(col[:,:,t], kernsize // 2, mode='edge')
         for i in range(crop_size):
             for j in range(crop_size):
-                  region = padded[i:i + kernsize, j:j + kernsize]
-                  new[i, j,t] = np.sum(region * dataval)
+                region = padded[i:i + kernsize, j:j + kernsize]
+                new[i, j,t] = np.sum(region * dataval)
     #readjust and print
     plt.imshow(new)
     plt.title(bluramount)
