@@ -1,3 +1,7 @@
+import numpy as np
+import math
+from matplotlib import pyplot as plt
+from PIL import Image
 def blurgb(bluramount,kernsize,picture_name):
     #makes the origional
     img = Image.open(picture_name).convert('RGB')
