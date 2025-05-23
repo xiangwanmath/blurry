@@ -1,5 +1,4 @@
 import numpy as np
-import math
 from matplotlib import pyplot as plt
 from PIL import Image
 def blurgb(bluramount,kernsize,picture_name):
@@ -15,7 +14,7 @@ def blurgb(bluramount,kernsize,picture_name):
     #makes the kernel
     t_value = bluramount
     def g(t, x, y):
-        return (1 / (4 * math.pi * t)) * math.exp(-(x**2 + y**2) / (4 * t))
+        return (1 / (4 * np.pi * t)) * np.exp(-(x**2 + y**2) / (4 * t))
     halfkern = kernsize // 2
     datagrid = np.zeros((kernsize,kernsize),dtype='object')
     dataval = np.zeros((kernsize,kernsize),dtype='float')
