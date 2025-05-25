@@ -2,7 +2,8 @@
 1.6
 ##
 newtons method 
-<pre>def newton(fx,dydx):
+```python
+def newton(fx,dydx):
     sol=[]
     for i in range(-10,10,2):
         run = 0
@@ -42,12 +43,15 @@ def fx(x):
 def dydx(x):
     return 16*x**3-12*x+3
 
-newton(fx,dydx)</pre>
+newton(fx,dydx)
+```
+
 ##
 1.8
 ##
 one variable gradient decent 
-<pre>import math
+```python
+import math
 def grade_with_x(fx, dydx, step, min, max, goal=0.000001):
     sol=[]
     for i in range(min,max+1,1):
@@ -94,14 +98,16 @@ def f(x):
     return math.sin(x)-0.1*x**2
 def dydx(x):
     return math.cos(x)-0.2*x
-grade_with_x(f,dydx,0.1,-1,1)</pre>
+grade_with_x(f,dydx,0.1,-1,1)
+```
 
 ###
 1.9
 ##
 two variable gradient decent with cicular norm 
 
-<pre>import math
+```python
+import math
 def gradecon(z,dzdx,dzdy,step, goal=0.00001):
     def in_bounds(x,y):
         return x**2+y**2<=16
@@ -143,12 +149,14 @@ def gradecon(z,dzdx,dzdy,step, goal=0.00001):
         if z(x, y) < bigmin:
             bigmin = z(x, y)
             bif = (x, y)
-    print('global min at', bif, 'of', bigmin)</pre>
+    print('global min at', bif, 'of', bigmin)
+```
   ###
   1.10
   ##
   four variabe gradient decent 
-  <pre>def gradefourvar(f,dfdx,dfdy,dfdz,dfda,step, goal=1e-6):
+  ```python
+def gradefourvar(f,dfdx,dfdy,dfdz,dfda,step, goal=1e-6):
     xmn = -1
     xmx = 1
     ymn = -1
@@ -210,4 +218,5 @@ def dfdz(x,y,z,a):
     return 4*z-2*y+a+2
 def dfda(x,y,z,a):
     return 2*a+z-1
-gradefourvar(f, dfdx,dfdy,dfdz,dfda,0.2)</pre>
+gradefourvar(f, dfdx,dfdy,dfdz,dfda,0.2)
+```
