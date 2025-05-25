@@ -43,7 +43,7 @@ black and white blur
 2.5
 ##
 RGB blur only part of image 
-'''python 
+```python
 def blurgb_part(bluramount,kernsize,picture_name,rmn,rmx,cmn,cmx):
     #makes the origional
     img = Image.open(picture_name).convert('RGB')
@@ -87,7 +87,7 @@ def blurgb_part(bluramount,kernsize,picture_name,rmn,rmx,cmn,cmx):
     plt.axis('off')
     plt.show()
 blurgb_part(10,23, 'ironman.jpg',30,70,30,70)
-'''
+```
 
 ##
 2.6
