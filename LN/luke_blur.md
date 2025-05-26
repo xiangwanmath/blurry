@@ -44,6 +44,9 @@ black and white blur
 ##
 RGB blur only part of image 
 ```python
+import numpy as np
+from matplotlib import pyplot as plt
+from PIL import Image
 def blurgb_part(bluramount,kernsize,picture_name,rmn,rmx,cmn,cmx):
     #makes the origional
     img = Image.open(picture_name).convert('RGB')
