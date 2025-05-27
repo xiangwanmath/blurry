@@ -2,6 +2,7 @@
 heat equation graph
 ```python
 import numpy as np
+import matplotlib.pyplot as plt
 def heat(x_step,t_step,tmx,a,b,lic,ric,bic):
     #set up
     l=(1.5**2)*(t_step/x_step)
@@ -42,12 +43,18 @@ def heat(x_step,t_step,tmx,a,b,lic,ric,bic):
         anw=np.linalg.solve(mrx_one,mrx_two)
         for o, a in enumerate(anw):
             final[- 2 - i, o + 1] = a.item()
-    print(final)
+    plt.imshow(final, aspect='auto', cmap='plasma',
+               extent=[x_v[0], x_v[-1], t_v[0], t_v[-1]])
+    plt.colorbar(label='Temperature')
+    plt.xlabel('Position (x)')
+    plt.ylabel('Time (t)')
+    plt.title('Heat Map of Temperature Over Time and Space')
+    plt.show()
 def lic(t):
     return 0
 def ric(t):
     return 0
 def bic(x):
-    return x**2
-heat(0.5,0.1,1,-1,1,lic,ric,bic)
+    return 1-abs(x)
+heat(0.1,0.1,3,-1,1,lic,ric,bic)
 ```
