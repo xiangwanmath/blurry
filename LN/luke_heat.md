@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 def heat(x_step,t_step,tmx,a,b,lic,ric,bic):
     #set up
-    l=(1.5**2)*(t_step/x_step)
+    l=(1.5**2)*(t_step/x_step**2)
     x_v=np.arange(a, b + x_step, x_step)
     t_v=np.arange(0, tmx, t_step)
     grid = np.empty((len(t_v), len(x_v)), dtype=object)
@@ -42,7 +42,7 @@ def heat(x_step,t_step,tmx,a,b,lic,ric,bic):
                 mrx_two[n,0]=final[len(t_v) - 1 - i, n + 1]
         anw=np.linalg.solve(mrx_one,mrx_two)
         for o, a in enumerate(anw):
-            final[- 2 - i, o + 1] = a.item()
+             final[- 2 - i, o + 1] = a.item()
     plt.imshow(final, aspect='auto', cmap='plasma',
                extent=[x_v[0], x_v[-1], t_v[0], t_v[-1]])
     plt.colorbar(label='Temperature')
@@ -55,6 +55,6 @@ def lic(t):
 def ric(t):
     return 0
 def bic(x):
-    return 1-abs(x)
-heat(0.1,0.1,3,-1,1,lic,ric,bic)
+    return 2-abs(x)
+heat(0.01,0.01,0.5,-1,1,lic,ric,bic)
 ```
