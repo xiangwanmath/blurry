@@ -118,3 +118,88 @@ def bic(x):
     return x**2
 heat(0.01,0.01,1,-1,1,lic,ric,bic)
 ```
+## 2d heat equation neumann
+``` python
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+def heat_neu_three(a,b,n,t_step,tmx,bic):
+    xy_step=(b-a)/n
+    c = (1.5 ** 2) * (t_step / xy_step ** 2)
+    xy_v = np.arange(a, b+xy_step, xy_step)
+    t_v = np.arange(0, tmx, t_step)
+    grid = np.empty((len(xy_v), len(xy_v)), dtype=object)
+    for i, y in enumerate(xy_v):
+        for j, x in enumerate(xy_v):
+            grid[i, j] = (x, y)
+    final=np.zeros((len(t_v),len(xy_v),len(xy_v)))
+    for i in range(len(xy_v)):
+        for j in range(len(xy_v)):
+            x,y=grid[i,j]
+            final[0,i,j]=bic(x,y)
+    num=len(xy_v)
+    sc=0
+    #solve
+    for t in range(1, len(t_v)):
+        mrx_one = np.zeros(((num ** 2), (num ** 2)))
+        mrx_two = np.zeros(((num ** 2), 1))
+        for m in range(num ** 2):
+            i = m // num
+            j = m % num
+            index = i * num + j
+            if 0 < i < num - 1 and 0 < j < num - 1:
+                mrx_one[m, index] = 1 + 4 * c #self
+                mrx_one[m, index - num] = -c  # top neighbor
+                mrx_one[m, index + num] = -c  # bottom neighbor
+                mrx_one[m, index - 1] = -c  # left neighbor
+                mrx_one[m, index + 1] = -c #right neighbor
+                mrx_two[m, 0] = final[t - 1, i, j]
+            else:
+                if i == 0:
+                    mrx_one[m,index+num] = 1
+                    mrx_one[m,index]=-1
+                    mrx_two[m,0]=sc*xy_step
+                elif i == num-1:
+                    mrx_one[m,index-num] = -1
+                    mrx_one[m,index]=1
+                    mrx_two[m,0]=sc*xy_step
+                elif j == 0:
+                    mrx_one[m,index+1] = 1
+                    mrx_one[m,index]=-1
+                    mrx_two[m,0]=sc*xy_step
+                elif j == num-1:
+                    mrx_one[m,index-1] = -1
+                    mrx_one[m,index]=1
+                    mrx_two[m,0]=sc*xy_step
+        anw = np.linalg.solve(mrx_one, mrx_two)
+        for i in range(num):
+            for j in range(num):
+                ind=i * num + j
+                final[t, i, j] = anw[ind].item()
+
+    #  Animation
+    fig, ax = plt.subplots()
+    im = ax.imshow(final[0], aspect='auto', cmap='plasma', origin='lower',
+                   extent=[xy_v[0], xy_v[-1], xy_v[0], xy_v[-1]], vmin=0, vmax=10)
+    plt.colorbar(im, ax=ax, label='Temperature')
+    ax.set_xlabel('Position (x)')
+    ax.set_ylabel('Position (y)')
+    ax.set_title('Heat Map of Temperature (Time Evolving)')
+    def update(frame):
+        im.set_array(final[frame])
+        ax.set_title(f"Time: {frame * t_step:.2f} s")
+        return [im]
+    ani = animation.FuncAnimation(fig, update, frames=len(t_v), interval=1000, blit=True)
+    ani.save("heat_animation.gif", writer="pillow", fps=1)
+    plt.show()
+def bic(x,y):
+    if x>-0.75 and x<-0.25 and y<0.5 and y>0:
+        return 10
+    elif x<0.75 and x>0.25 and y<0.5 and y>0:
+        return 10
+    elif x>-0.75 and x<0.75 and y<-0.5 and y>-0.75:
+        return 10
+    else:
+        return 0
+heat_neu_three(-1,1,20,0.01,0.2,bic)
+```
