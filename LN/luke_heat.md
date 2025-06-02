@@ -203,3 +203,62 @@ def bic(x,y):
         return 0
 heat_neu_three(-1,1,20,0.01,0.2,bic)
 ```
+##
+black and white explicit heat blur 
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from PIL import Image
+
+def new_kern(t_step, tmx, filename):
+    img = Image.open(filename).convert('L')
+    img_matrix = np.array(img) / 255.0
+    h, w = img_matrix.shape
+    crop_size = min(h, w)
+    start_h = (h - crop_size) // 2
+    start_w = (w - crop_size) // 2
+    image = img_matrix[start_h:start_h + crop_size, start_w:start_w + crop_size]
+    xy_step = 1
+    if t_step / xy_step > 0.5:
+        raise ValueError("condition not met: xy_step / t_step must be ≤ 0.5")
+    xy_v = image[0, :]
+    num = len(xy_v)
+    c = (1.5 ** 2) * (t_step / xy_step)
+    t_v = np.arange(0, tmx, t_step)
+    final = np.zeros((len(t_v), num, num))
+    final[0, :, :] = image[:num, :num]
+
+    def func(x):
+        k = 1
+        return 1 / (1 + (x / k) ** 2)
+
+    # solve
+    for t in range(len(t_v) - 1):
+        for i in range(num):
+            for j in range(num):
+                if i == 0 or j == 0 or i == num - 1 or j == num - 1:
+                    final[t + 1, i, j] = 0
+                else:
+                    n = final[t, i - 1, j] - final[t, i, j]
+                    e = final[t, i, j + 1] - final[t, i, j]
+                    s = final[t, i + 1, j] - final[t, i, j]
+                    w = final[t, i, j - 1] - final[t, i, j]
+                    final[t + 1, i, j] = c * (func(n) * n + func(e) * e + func(s) * s + func(w) * w) + final[t, i, j]
+
+    # Animation
+    fig, ax = plt.subplots()
+    im = ax.imshow(final[0], aspect='auto', cmap='gray',
+                   extent=[0, crop_size, 0, crop_size], vmin=0, vmax=1)
+
+    def update(frame):
+        im.set_array(final[frame])
+        ax.set_title(f"Time: {frame * t_step:.2f} s")
+        return [im]
+
+    ani = animation.FuncAnimation(fig, update, frames=len(t_v), interval=1000, blit=True)
+    ani.save("new_kern.gif", writer="pillow", fps=1)
+    plt.show()
+
+new_kern(0.1, 1, 'abstrc.jpg')
+```
