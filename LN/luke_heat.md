@@ -262,3 +262,69 @@ def new_kern(t_step, tmx, filename):
 
 new_kern(0.1, 1, 'abstrc.jpg')
 ```
+##
+color explicit heat blur 
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+from PIL import Image
+
+def new_kern_col(t_step, tmx, filename):
+    img = Image.open(filename).convert('RGB')
+    img_matrix = np.array(img) / 255.0
+    h, w, color = img_matrix.shape
+    crop_size = min(h, w)
+    start_h = (h - crop_size) // 2
+    start_w = (w - crop_size) // 2
+    image = img_matrix[start_h:start_h + crop_size, start_w:start_w + crop_size,:]
+    xy_step = 1
+    if t_step / xy_step > 0.5:
+        raise ValueError("condition not met: xy_step / t_step must be ≤ 0.5")
+    xy_v = image[0, :]
+    num = len(xy_v)
+    c = (1.5 ** 2) * (t_step / xy_step)
+    t_v = np.arange(0, tmx, t_step)
+    final = np.zeros((len(t_v), num, num,color))
+    final[0, :, :,:] = image[:num, :num,:]
+
+    def func(x):
+        k = 1
+        return 1 / (1 + (x / k) ** 2)
+
+    # solve
+    for z in range(color):
+        for t in range(len(t_v) - 1):
+            for i in range(num):
+                for j in range(num):
+                    n=0
+                    e=0
+                    s=0
+                    w=0
+                    if i != 0:
+                        n = final[t, i - 1, j,z] - final[t, i, j,z]
+                    if j != num - 1:
+                        e = final[t, i, j + 1,z] - final[t, i, j,z]
+                    if i != num-1:
+                        s = final[t, i + 1, j,z] - final[t, i, j,z]
+                    if j != 0:
+                        w = final[t, i, j - 1,z] - final[t, i, j,z]
+
+                    final[t + 1, i, j,z] = c * (func(n) * n + func(e) * e + func(s) * s + func(w) * w) + final[t, i, j,z]
+
+    # Animation
+    fig, ax = plt.subplots()
+    im = ax.imshow(final[0], aspect='auto',
+                   extent=[0, crop_size, 0, crop_size], vmin=0, vmax=1)
+
+    def update(frame):
+        im.set_array(final[frame])
+        ax.set_title(f"Time: {frame * t_step:.2f} s")
+        return [im]
+
+    ani = animation.FuncAnimation(fig, update, frames=len(t_v), interval=1000, blit=True)
+    ani.save("new_kern.gif", writer="pillow", fps=1)
+    plt.show()
+
+new_kern(0.1, 1, 'abstrc.jpg')
+```
