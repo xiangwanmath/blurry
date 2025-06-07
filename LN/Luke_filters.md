@@ -130,5 +130,5 @@ def denoise(filename, t_step,sigma,stop):
     plt.grid(True)
     plt.legend()
     plt.show()
-denoise('Lena.jpg',0.0001, 0.4,0.01)
+denoise('Lena.jpg',0.0001, 0.3,0.01)
 ```
