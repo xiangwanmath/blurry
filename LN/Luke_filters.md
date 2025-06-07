@@ -107,7 +107,6 @@ def denoise(filename, t_step,sigma,stop):
             q+=1
         if n % 10 == 0:
             print(n)
-            print('lam=',lam)
             print('e=',e)
             print()
     plt.figure()
@@ -120,6 +119,7 @@ def denoise(filename, t_step,sigma,stop):
     plt.imshow(image, cmap='gray', vmin=0, vmax=1)
     plt.title("Denoised Image")
     plt.axis('off')
+    plt.savefig('output/denoised_image.jpg', bbox_inches='tight', pad_inches=0)
     plt.show()
 
     plt.figure()
@@ -129,6 +129,7 @@ def denoise(filename, t_step,sigma,stop):
     plt.title('Energy Decay Over Time')
     plt.grid(True)
     plt.legend()
+    plt.savefig('output/graph,jgp', bbox_inches='tight', pad_inches=0)
     plt.show()
-denoise('Lena.jpg',0.0001, 0.3,0.01)
+denoise('pictures/lena.jpg',0.0001, 0.3,0.01)
 ```
