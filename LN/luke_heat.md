@@ -204,7 +204,7 @@ def bic(x,y):
 heat_neu_three(-1,1,20,0.01,0.2,bic)
 ```
 ##
-black and white explicit heat blur 
+black and white explicit ani blur 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
@@ -263,7 +263,7 @@ def new_kern(t_step, tmx, filename):
 new_kern(0.1, 1, 'abstrc.jpg')
 ```
 ##
-color explicit heat blur 
+color explicit ani  blur 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
