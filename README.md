@@ -1,3 +1,3 @@
 # blurry
 Summer USRE 2025
-[Read the full research paper →](./paper.pdf)
+[Overleaf from the summer →](./paper.pdf)
